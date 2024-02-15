@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: File an issue
+    url: https://github.com/gemini-testing/hermione/issues
+    about: We track issues in the gemini-testing/hermione repository

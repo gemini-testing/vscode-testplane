@@ -1,0 +1,7 @@
+.idea
+.vscode
+out
+LICENSE
+package.json
+package-lock.json
+*.md
