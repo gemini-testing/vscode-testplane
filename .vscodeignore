@@ -1,0 +1,4 @@
+**/*
+!out/*.js
+!LICENSE
+!README.md
