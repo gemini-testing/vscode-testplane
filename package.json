@@ -2,7 +2,7 @@
   "name": "vscode-hermione",
   "displayName": "Hermione",
   "description": "Integration Hermione with VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "gemini-testing",
   "engines": {
     "vscode": "^1.73.0"
