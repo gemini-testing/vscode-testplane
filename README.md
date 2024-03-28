@@ -3,7 +3,7 @@
 This extension supports [Hermione][hermione] features in VS Code environment. Available features:
 
 - [Install Hermione](#install-hermione)
-- [Using the REPL mode][#using-the-repl-mode]
+- [Using the REPL mode](#using-the-repl-mode)
 
 ## Install Hermione
 
