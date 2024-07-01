@@ -1,8 +1,8 @@
 {
-  "name": "vscode-hermione",
-  "displayName": "Hermione",
-  "description": "Integration Hermione with VS Code",
-  "version": "0.0.2",
+  "name": "vscode-testplane",
+  "displayName": "Testplane",
+  "description": "Integration Testplane with VS Code",
+  "version": "0.0.1",
   "publisher": "gemini-testing",
   "engines": {
     "vscode": "^1.73.0"
@@ -11,7 +11,7 @@
     "Testing"
   ],
   "activationEvents": [
-    "workspaceContains:node_modules/.bin/hermione",
+    "workspaceContains:node_modules/.bin/testplane",
     "onCommand:hrm.install"
   ],
   "main": "./out/extension.js",
@@ -20,7 +20,7 @@
       {
         "category": "Test",
         "command": "hrm.install",
-        "title": "Install Hermione"
+        "title": "Install Testplane"
       }
     ],
     "keybindings": {
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gemini-testing/vscode-hermione.git"
+    "url": "git+https://github.com/gemini-testing/vscode-testplane.git"
   },
   "license": "MIT",
   "scripts": {
