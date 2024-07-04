@@ -2,7 +2,7 @@
   "name": "vscode-testplane",
   "displayName": "Testplane",
   "description": "Integration Testplane with VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon": "images/logo.png",
   "publisher": "gemini-testing",
   "engines": {
