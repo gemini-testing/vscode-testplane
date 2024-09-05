@@ -1,16 +1,16 @@
 {
-	"compilerOptions": {
-		"module": "Node16",
-		"target": "ES2022",
-		"outDir": "out",
-		"lib": [
-			"ES2022"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true
-	},
-	"include": ["src"],
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ESNext",
+        "outDir": "out",
+        "lib": ["ESNext"],
+        "sourceMap": true,
+        "rootDir": "src",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "Bundler"
+    },
+    "include": ["src"]
 }
