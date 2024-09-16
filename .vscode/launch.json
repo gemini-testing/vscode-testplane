@@ -2,17 +2,19 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Run Extension",
+			"name": "Run Extension Basic Sample",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"${workspaceFolder}/test-project"
+				"${workspaceFolder}/samples/basic"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			"preLaunchTask": "npm: watch"
+            "env": {
+                "TESTPLANE_VSCODE_DEBUG": "true"
+            }
 		}
 	]
 }
