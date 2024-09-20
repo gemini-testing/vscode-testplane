@@ -3,12 +3,12 @@ import path from "node:path";
 import type { Options } from "@wdio/types";
 
 const extensionPath = process.env.VSCODE_E2E_EXTENSION_PATH ?? process.cwd();
-const workspacePath = path.resolve(process.cwd(), process.env.VSCODE_E2E_WORKSPACE_PATH || "samples/basic");
+const workspacePath = path.resolve(process.cwd(), process.env.VSCODE_E2E_WORKSPACE_PATH || "samples/settings-view");
 
 export const config: Options.Testrunner = {
     runner: "local",
     specs: ["./specs/**/*.ts"],
-    maxInstances: process.env.RUN_IN_CI ? 1 : 10,
+    maxInstances: 1,
     capabilities: [
         {
             browserName: "vscode",
@@ -16,6 +16,10 @@ export const config: Options.Testrunner = {
             "wdio:vscodeOptions": {
                 extensionPath,
                 workspacePath,
+                userSettings: {
+                    "npm.packageManager": "npm",
+                    "git.openRepositoryInParentFolders": "never",
+                },
             },
         },
     ],
@@ -23,7 +27,7 @@ export const config: Options.Testrunner = {
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 0,
-    specFileRetries: 1,
+    specFileRetries: process.env.RUN_IN_CI ? 1 : 0,
     services: ["vscode"],
     framework: "mocha",
     reporters: ["spec"],
@@ -36,7 +40,7 @@ export const config: Options.Testrunner = {
             return;
         }
 
-        const screenshotDir = path.join(__dirname, "screens-on-fail");
+        const screenshotDir = path.join(__dirname, "..", "screens-on-fail");
         await fs.mkdir(screenshotDir, { recursive: true });
         await browser.saveScreenshot(path.join(screenshotDir, `${test.parent} - ${test.title}.png`));
     },

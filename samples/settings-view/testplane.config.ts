@@ -17,7 +17,6 @@ export default {
     },
     browsers: {
         chrome: {
-            automationProtocol: "devtools",
             headless: true,
             desiredCapabilities: {
                 browserName: "chrome",

@@ -1,5 +1,5 @@
 import { expect } from "@wdio/globals";
-import { VSCodePO } from "../page-objects";
+import { VSCodePO } from "../../page-objects";
 
 describe("Testing view in sidebar", () => {
     describe("run tests", () => {

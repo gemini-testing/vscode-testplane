@@ -1,9 +1,9 @@
 import { expect } from "@wdio/globals";
-import { VSCodePO } from "../page-objects";
+import { VSCodePO } from "../../page-objects";
 
 describe("Testing view in sidebar", () => {
-    describe("read tests", () => {
-        it("should correctly render tests tree", async () => {
+    describe("run tests", () => {
+        it("should run only child tests by click on suite item", async () => {
             const vscodePO = await VSCodePO.create();
             const testingViewControl = vscodePO.getTestingViewControl();
             await testingViewControl.open();
@@ -15,14 +15,13 @@ describe("Testing view in sidebar", () => {
             const [mainTreeItem] = await firstSection.getVisibleItems();
 
             await mainTreeItem.expandAll();
-            const testsFullTitle = await mainTreeItem.getTestsFullTitle();
+            const suiteTreeItem = await firstSection.getVisibleItemByLabel("suite");
 
-            expect(testsFullTitle).toEqual([
-                "tests test.testplane.ts suite success chrome",
-                "tests test.testplane.ts suite fail chrome",
-                "tests test.testplane.ts suite skipped chrome",
-                "tests test.testplane.ts test without suite chrome",
-            ]);
+            const runTestButton = await suiteTreeItem!.getActionButton("Run Test");
+            await runTestButton?.elem.click();
+            await sidebar.waitTestsRunComplete();
+
+            await expect(await sidebar.getTestsRunStats()).toBe("1/2");
         });
     });
 });

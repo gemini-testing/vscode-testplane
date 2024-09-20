@@ -16,6 +16,7 @@ import type {
     TestplaneMasterTestResult,
     TestplaneMasterRunTestsOpts,
 } from "../types";
+import type { SettingOptions } from "../views/settings";
 
 interface LocationFromStack {
     path: string;
@@ -31,22 +32,38 @@ enum TestStatuses {
     ENQUEUED = "enqueued",
 }
 
+type TestRunnerOpts = {
+    controller: vscode.TestController;
+    context: vscode.ExtensionContext;
+    tree: TestTree;
+    workspaceFolder: vscode.WorkspaceFolder;
+    api: TestplaneMasterRPC;
+    handlers: TestplaneMasterHandlers;
+};
+
 export class TestRunner extends vscode.Disposable {
+    private readonly _controller: vscode.TestController;
+    private readonly _context: vscode.ExtensionContext;
+    private readonly _tree: TestTree;
+    private readonly _workspaceFolder: vscode.WorkspaceFolder;
+    private readonly _api: TestplaneMasterRPC;
+    private readonly _handlers: TestplaneMasterHandlers;
     private _testRun: vscode.TestRun | undefined;
 
-    constructor(
-        private readonly _controller: vscode.TestController,
-        private readonly _tree: TestTree,
-        private readonly _workspaceFolder: vscode.WorkspaceFolder,
-        private readonly _api: TestplaneMasterRPC,
-        private readonly _handlers: TestplaneMasterHandlers,
-    ) {
+    constructor(opts: TestRunnerOpts) {
         super(() => {
             logger.debug?.("Dispose test runner");
 
             this._handlers.clearListeners();
             this._endTestRun();
         });
+
+        this._controller = opts.controller;
+        this._context = opts.context;
+        this._tree = opts.tree;
+        this._workspaceFolder = opts.workspaceFolder;
+        this._api = opts.api;
+        this._handlers = opts.handlers;
 
         this._handleTestRunResults();
     }
@@ -63,31 +80,37 @@ export class TestRunner extends vscode.Disposable {
 
         const tests = request.include || [];
         const root = this._workspaceFolder.uri.fsPath;
+        const settings = this._context.workspaceState.get<SettingOptions>("tpn.settings");
+
+        const files = getTestFiles(tests);
+        const opts = getRunTestsOpts(tests, settings);
 
         if (!tests.length) {
             const browserItems = this._tree.getBrowserTestItemsByFolderPath(root);
             browserItems.forEach(browserItem => this._enqueueTestItem(browserItem));
 
             logger.info(`Running all tests in ${basename(root)} folder`);
-            await this._api.runTests([]);
-
-            return;
-        }
-
-        tests.forEach(testItem => this._enqueueTestItem(testItem));
-        const files = getTestFiles(tests);
-        const opts = getRunTestsOpts(tests);
-
-        if (!_.isEmpty(opts)) {
-            logger.info(`Running ${files.length} file(s) with options: ${JSON.stringify(opts)}`);
         } else {
-            logger.info(
-                `Running ${files.length} file(s):`,
-                files.map(f => relative(root, f)),
-            );
+            tests.forEach(testItem => this._enqueueTestItem(testItem));
+
+            if (!_.isEmpty(opts)) {
+                logger.info(`Running ${files.length} file(s) with options: ${JSON.stringify(opts)}`);
+            } else {
+                logger.info(
+                    `Running ${files.length} file(s):`,
+                    files.map(f => relative(root, f)),
+                );
+            }
         }
 
-        await this._api.runTests(files, opts);
+        try {
+            await this._api.runTests(files, opts);
+        } catch (err) {
+            this._testRun?.end();
+            this._testRun = undefined;
+
+            throw err;
+        }
     }
 
     private _handleTestRunResults(): void {
@@ -206,7 +229,10 @@ function getTestFiles(tests: readonly vscode.TestItem[]): string[] {
     return _.uniq(tests.map(test => normalize(test.uri!.fsPath)).filter(Boolean));
 }
 
-function getRunTestsOpts(tests: readonly vscode.TestItem[]): Partial<TestplaneMasterRunTestsOpts> {
+function getRunTestsOpts(
+    tests: readonly vscode.TestItem[],
+    settings: SettingOptions | undefined,
+): Partial<TestplaneMasterRunTestsOpts> {
     const opts: TestplaneMasterRunTestsOpts = {};
     const patterns: string[] = [];
     const browserIds = new Set<string>();
@@ -229,6 +255,22 @@ function getRunTestsOpts(tests: readonly vscode.TestItem[]): Partial<TestplaneMa
 
     if (browserIds.size) {
         opts.browsers = [...browserIds];
+    }
+
+    if (_.isEmpty(settings)) {
+        return opts;
+    }
+
+    if (settings.devtools) {
+        opts.devtools = true;
+    }
+
+    if (settings.repl) {
+        opts.replMode = {
+            enabled: true,
+            beforeTest: false,
+            onFail: false,
+        };
     }
 
     return opts;
