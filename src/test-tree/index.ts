@@ -221,6 +221,8 @@ export class TestTree extends vscode.Disposable {
                 const browserItem = this._createBrowserTestItem(browserId, testItem);
                 this._browserItems.set(browserItem.id, browserItem);
 
+                browserItem.tags = [...browserItem.tags, new vscode.TestTag(`browser:${browserId}`)];
+
                 TestCaseByBrowser.register(browserItem, testItem);
                 testItem.children.add(browserItem);
             });
