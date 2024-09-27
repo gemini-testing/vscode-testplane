@@ -1,5 +1,5 @@
 import { browser } from "@wdio/globals";
-import type { Workbench } from "wdio-vscode-service";
+import type { BottomBarPanel, Workbench, WebView } from "wdio-vscode-service";
 
 import { TestingViewControl } from "./testing/view-control";
 import { TestingSideBar } from "./testing/side-bar";
@@ -23,6 +23,14 @@ export class VSCodePO {
 
     getTestingSideBar(): TestingSideBar {
         return new TestingSideBar(this._workbench);
+    }
+
+    getBottomBar(): BottomBarPanel {
+        return this._workbench.getBottomBar();
+    }
+
+    getWebviewByTitle(title: string): Promise<WebView> {
+        return this._workbench.getWebviewByTitle(title);
     }
 }
 

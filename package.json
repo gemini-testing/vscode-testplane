@@ -29,6 +29,15 @@
       "key": "ctrl+shift+8",
       "mac": "cmd+shift+8",
       "when": "editorTextFocus && editorLangId =~ /(javascript|typescript)/"
+    },
+    "views": {
+      "test": [
+        {
+          "type": "webview",
+          "id": "tpn.settingsView",
+          "name": "Testplane"
+        }
+      ]
     }
   },
   "repository": {
@@ -41,7 +50,9 @@
     "build": "tsup --minify --clean",
     "watch": "tsup --watch --sourcemap",
     "test": "npm run lint && npm run test-e2e",
-    "test-e2e": "wdio run ./tests/e2e/wdio.conf.ts",
+    "test-e2e": "npm run test-e2e:basic && npm run test-e2e:settings-view",
+    "test-e2e:basic": "wdio run ./tests/e2e/basic/wdio.conf.ts",
+    "test-e2e:settings-view": "wdio run ./tests/e2e/settings-view/wdio.conf.ts",
     "eslint": "eslint src --ext ts --cache",
     "lint": "eslint --cache . && prettier --check .",
     "reformat": "eslint --fix . && prettier --write .",

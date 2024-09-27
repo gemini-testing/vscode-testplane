@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.section__header {
+    font-size: 11px;
+    margin: 10px 0 3px 8px;
+    font-weight: 700;
+    color: var(--vscode-editor-inlineValuesForeground);
+    text-transform: uppercase;
+}
+
+.section__list {
+    display: flex;
+    flex-direction: column;
+}
+
+.section__list-item {
+    height: 22px;
+    line-height: 22px;
+    padding-right: 2px;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    white-space: nowrap;
+    flex: 0;
+    cursor: pointer;
+}
+
+.section__list-item:hover {
+    background-color: #e8e8e8;
+}
+
+body[data-vscode-theme-kind="vscode-dark"] .section__list-item:hover {
+    background-color: #2a2d2e;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    cursor: inherit;
+    flex: auto;
+}
+
+input[type="checkbox"] {
+    margin-right: 4px;
+    cursor: pointer;
+}

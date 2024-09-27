@@ -7,29 +7,32 @@ import { version, displayName } from "../package.json";
 import { TestRunner } from "./api/runner";
 import { createChildProcess, createTestplaneMasterRpc } from "./api";
 import { registerCommands } from "./commands";
+import { registerViews } from "./views";
 import { CONFIG_GLOB } from "./constants";
 
 const CONFIG_DEBOUNCE_WAIT = 300;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // eslint-disable-next-line no-use-before-define
-    const extension = new TestplaneExtension();
+    const extension = new TestplaneExtension(context);
     context.subscriptions.push(extension);
     await extension.activate();
 }
 
 class TestplaneExtension {
+    private _context: vscode.ExtensionContext;
     private _testController: vscode.TestController;
     private _loadingTestItem: vscode.TestItem;
     private _testTree: TestTree;
     private _testRunProfiles = new Map<string, vscode.TestRunProfile>();
     private _disposables: vscode.Disposable[] = [];
 
-    constructor() {
+    constructor(context: vscode.ExtensionContext) {
         logger.info(
             `[v${version}] Testplane extension is activated because Testplane is installed or there is a config file in the workspace`,
         );
 
+        this._context = context;
         this._testController = vscode.tests.createTestController(displayName.toLowerCase(), displayName);
         this._testController.refreshHandler = async (): Promise<void> => {
             try {
@@ -45,7 +48,7 @@ class TestplaneExtension {
 
     async activate(): Promise<void> {
         const configWatcher = this._createConfigWatcher();
-        this._disposables = [...registerCommands(), configWatcher];
+        this._disposables = [...registerViews(this._context), ...registerCommands(), configWatcher];
 
         await this._defineTestRunProfiles();
     }
@@ -98,7 +101,14 @@ class TestplaneExtension {
 
             this._testController.items.delete(this._loadingTestItem.id);
 
-            const runner = new TestRunner(this._testController, this._testTree, wf, api, handlers);
+            const runner = new TestRunner({
+                controller: this._testController,
+                context: this._context,
+                tree: this._testTree,
+                workspaceFolder: wf,
+                api,
+                handlers,
+            });
 
             const previousRunProfiles = this._testRunProfiles;
             this._testRunProfiles = new Map();
@@ -112,7 +122,11 @@ class TestplaneExtension {
             }
 
             runProfile.runHandler = async (request, token): Promise<void> => {
-                await runner.runTests(request, token);
+                try {
+                    await runner.runTests(request, token);
+                } catch (err) {
+                    showTestplaneError("There was an error during run Testplane tests", err as Error);
+                }
             };
 
             // TODO: should register for each workspace

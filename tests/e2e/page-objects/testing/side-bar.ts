@@ -21,17 +21,29 @@ export class TestingSideBar {
     }
 
     async waitTestsRead(): Promise<void> {
-        await browser.waitUntil(async () => {
-            const sections = await this._sidebarView.getSections();
-            const firstTreeItemText = await sections[0].elem.$(".label").getText();
+        await browser.waitUntil(
+            async () => {
+                const sections = await this._sidebarView.getSections();
+                const firstTreeItemText = await sections[0].elem.$(".test-item .label").getText();
 
-            return firstTreeItemText !== "Reading Testplane Tests...";
-        });
+                return firstTreeItemText !== "Reading Testplane Tests...";
+            },
+            { timeout: 20000 },
+        );
     }
 
     async runAllTests(): Promise<void> {
+        // in order to show test explorer actions
+        await this._sidebarView.elem.moveTo();
+
         const runTestsBtn = await this._sidebarView.elem.$("aria/Run Tests");
         await runTestsBtn.click();
+    }
+
+    async cancelTestRun(): Promise<void> {
+        // in order to show test explorer actions
+        await this._sidebarView.elem.moveTo();
+        await this._sidebarView.elem.$(".codicon-testing-cancel-icon").click();
     }
 
     async waitTestsRunComplete(timeout: number = 30000): Promise<void> {

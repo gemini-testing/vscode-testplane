@@ -1,4 +1,5 @@
 import type { ViewSection, CustomTreeItem } from "wdio-vscode-service";
+import type { ChainablePromiseElement } from "webdriverio";
 import { TestingTreeItem } from "../";
 
 export class TestingViewSection {
@@ -6,6 +7,14 @@ export class TestingViewSection {
 
     constructor(section: ViewSection) {
         this._section = section;
+    }
+
+    get elem(): ChainablePromiseElement<WebdriverIO.Element> {
+        return this._section.elem;
+    }
+
+    async getTitle(): Promise<string> {
+        return this._section.elem.$(".title").getText();
     }
 
     async getLabel(): Promise<string> {
