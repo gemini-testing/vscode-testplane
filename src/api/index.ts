@@ -3,15 +3,14 @@ import { fork, type ChildProcess } from "node:child_process";
 import { resolve, normalize } from "pathe";
 import { logger, findNodePath } from "../utils";
 import ipc from "../ipc";
-import { CONFIG_GLOB, CONFIG_GLOB_EXCLUDE } from "../constants";
 import { WorkerEvents, type WorkerInitFailEventMessage } from "../worker/types";
 import { MasterEvents } from "../types";
+import type { VSCodeConfig } from "../config";
 
 export * from "./rpc";
 
-export async function createChildProcess(wf: vscode.WorkspaceFolder): Promise<ChildProcess> {
+export async function createChildProcess(wf: vscode.WorkspaceFolder, config: VSCodeConfig): Promise<ChildProcess> {
     const workerPath = resolve(__dirname, "worker.js");
-    const configPaths = await vscode.workspace.findFiles(CONFIG_GLOB, CONFIG_GLOB_EXCLUDE);
     const execPath = await findNodePath();
 
     const proc = fork(workerPath, { cwd: normalize(wf.uri.fsPath), stdio: "overlapped", execPath });
@@ -59,7 +58,7 @@ export async function createChildProcess(wf: vscode.WorkspaceFolder): Promise<Ch
                 MasterEvents.INIT,
                 {
                     cwd: normalize(wf.uri.fsPath),
-                    configPath: configPaths[0].fsPath,
+                    configPath: config.configPath!,
                 },
                 proc,
             );

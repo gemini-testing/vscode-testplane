@@ -66,3 +66,9 @@ Adds a keybinding (`cmd+shift+8` for mac and `ctrl+shift+8` for others) to run a
 [testplane]: https://testplane.io/
 [testplane-repl-mode]: https://github.com/gemini-testing/testplane/blob/master/docs/cli.md#repl-mode
 [vscode-keyboard-shortcuts]: https://code.visualstudio.com/docs/getstarted/keybindings
+
+## Configuration
+
+You can configure Testplane using [user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings#_workspace-settings). Available settings:
+
+- `testplane.configPath`: The path to the Testplane [configuration file](https://testplane.io/docs/v8/config/main/).

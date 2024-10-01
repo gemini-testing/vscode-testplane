@@ -9,6 +9,7 @@ import { createChildProcess, createTestplaneMasterRpc } from "./api";
 import { registerCommands } from "./commands";
 import { registerViews } from "./views";
 import { CONFIG_GLOB } from "./constants";
+import { getVSCodeConfig } from "./config";
 
 const CONFIG_DEBOUNCE_WAIT = 300;
 
@@ -87,7 +88,8 @@ class TestplaneExtension {
 
             // TODO: should support few workspaces
             const wf = folders[0];
-            const childProc = await createChildProcess(wf);
+            const config = await getVSCodeConfig(wf);
+            const childProc = await createChildProcess(wf, config);
 
             const { api, handlers } = createTestplaneMasterRpc({
                 on: listener => {
