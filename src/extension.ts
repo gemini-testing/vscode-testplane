@@ -89,6 +89,14 @@ class TestplaneExtension {
             // TODO: should support few workspaces
             const wf = folders[0];
             const config = await getVSCodeConfig(wf);
+
+            if (!config.configPath) {
+                logger.error("Failed to start: Testplane config is not found");
+                this._testController.items.delete(this._loadingTestItem.id);
+
+                return;
+            }
+
             const childProc = await createChildProcess(wf, config);
 
             const { api, handlers } = createTestplaneMasterRpc({
