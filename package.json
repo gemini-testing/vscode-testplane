@@ -38,6 +38,16 @@
           "name": "Testplane"
         }
       ]
+    },
+    "configuration": {
+        "title": "Testplane",
+        "properties": {
+            "testplane.configPath": {
+                "markdownDescription": "The path to the Testplane [configuration file](https://testplane.io/docs/v8/config/main/)",
+                "type": "string",
+                "scope": "window"
+            }
+        }
     }
   },
   "repository": {
@@ -50,9 +60,11 @@
     "build": "tsup --minify --clean",
     "watch": "tsup --watch --sourcemap",
     "test": "npm run lint && npm run test-e2e",
-    "test-e2e": "npm run test-e2e:basic && npm run test-e2e:settings-view",
+    "test-e2e": "npm run test-e2e:basic && npm run test-e2e:settings-view && npm run test-e2e:vscode-settings && npm run test-e2e:empty",
     "test-e2e:basic": "wdio run ./tests/e2e/basic/wdio.conf.ts",
     "test-e2e:settings-view": "wdio run ./tests/e2e/settings-view/wdio.conf.ts",
+    "test-e2e:vscode-settings": "wdio run ./tests/e2e/vscode-settings/wdio.conf.ts",
+    "test-e2e:empty": "wdio run ./tests/e2e/empty/wdio.conf.ts",
     "eslint": "eslint src --ext ts --cache",
     "lint": "eslint --cache . && prettier --check .",
     "reformat": "eslint --fix . && prettier --write .",

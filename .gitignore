@@ -4,7 +4,7 @@ node_modules
 .DS_Store
 vscode.d.ts
 .eslintcache
-samples/**/.*
+samples/**/.testplane
 .wdio*
 .tmp
 tests/e2e/**/screens-on-fail
