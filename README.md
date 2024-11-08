@@ -2,6 +2,11 @@
 
 This extension supports [Testplane][testplane] features in VS Code environment.
 
+## Installation
+
+- From Marketplace: [vscode-testplane extention][testplane-extention].
+- From VSCode: Settings --> Extention --> Search `testplane`.
+
 ## Features
 
 - **Run** tests;
@@ -66,6 +71,7 @@ Adds a keybinding (`cmd+shift+8` for mac and `ctrl+shift+8` for others) to run a
 [testplane]: https://testplane.io/
 [testplane-repl-mode]: https://github.com/gemini-testing/testplane/blob/master/docs/cli.md#repl-mode
 [vscode-keyboard-shortcuts]: https://code.visualstudio.com/docs/getstarted/keybindings
+[testplane-extention]: https://marketplace.visualstudio.com/items?itemName=gemini-testing.vscode-testplane
 
 ## Configuration
 
