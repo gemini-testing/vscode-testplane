@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 
 export type VSCodeSettings = {
     configPath: string | undefined;
+    env: Record<string, string> | null;
 };
 
 export const getVSCodeSettings = (wf?: vscode.WorkspaceFolder): VSCodeSettings => {
@@ -19,9 +20,11 @@ export const getVSCodeSettings = (wf?: vscode.WorkspaceFolder): VSCodeSettings =
         });
 
     const configPath = get<string>("configPath");
+    const env = get<Record<string, string> | null>("env", null)!;
 
     return {
         configPath: resolveConfigPath(configPath, wf),
+        env,
     };
 };
 

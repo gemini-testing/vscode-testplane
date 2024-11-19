@@ -1,3 +1,6 @@
 {
-    "testplane.configPath": "./another-config/testplane.config.ts"
+    "testplane.configPath": "./another-config/testplane.config.ts",
+    "testplane.env": {
+        "TESTPLANE_SKIP_BROWSERS": "another-bro"
+    }
 }

@@ -46,6 +46,15 @@
                 "markdownDescription": "The path to the Testplane [configuration file](https://testplane.io/docs/v8/config/main/)",
                 "type": "string",
                 "scope": "window"
+            },
+            "testplane.env": {
+                "markdownDescription": "Environment variables passed to the Testplane process in addition to `process.env`",
+                "type": [
+                    "object",
+                    "null"
+                ],
+                "default": null,
+                "scope": "window"
             }
         }
     }
