@@ -2,7 +2,7 @@
   "name": "vscode-testplane",
   "displayName": "Testplane",
   "description": "Integration Testplane with VS Code",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "icon": "images/logo.png",
   "publisher": "gemini-testing",
   "engines": {
@@ -40,23 +40,23 @@
       ]
     },
     "configuration": {
-        "title": "Testplane",
-        "properties": {
-            "testplane.configPath": {
-                "markdownDescription": "The path to the Testplane [configuration file](https://testplane.io/docs/v8/config/main/)",
-                "type": "string",
-                "scope": "window"
-            },
-            "testplane.env": {
-                "markdownDescription": "Environment variables passed to the Testplane process in addition to `process.env`",
-                "type": [
-                    "object",
-                    "null"
-                ],
-                "default": null,
-                "scope": "window"
-            }
+      "title": "Testplane",
+      "properties": {
+        "testplane.configPath": {
+          "markdownDescription": "The path to the Testplane [configuration file](https://testplane.io/docs/v8/config/main/)",
+          "type": "string",
+          "scope": "window"
+        },
+        "testplane.env": {
+          "markdownDescription": "Environment variables passed to the Testplane process in addition to `process.env`",
+          "type": [
+            "object",
+            "null"
+          ],
+          "default": null,
+          "scope": "window"
         }
+      }
     }
   },
   "repository": {
