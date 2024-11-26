@@ -13,7 +13,15 @@ export async function createChildProcess(wf: vscode.WorkspaceFolder, config: VSC
     const workerPath = resolve(__dirname, "worker.js");
     const execPath = await findNodePath();
 
-    const proc = fork(workerPath, { cwd: normalize(wf.uri.fsPath), stdio: "overlapped", execPath });
+    const proc = fork(workerPath, {
+        cwd: normalize(wf.uri.fsPath),
+        stdio: "overlapped",
+        execPath,
+        env: {
+            ...process.env,
+            ...config.env,
+        },
+    });
 
     proc.stdout?.on("data", d => logger.worker("info", d.toString()));
     proc.stderr?.on("data", d => logger.worker("error", d.toString()));

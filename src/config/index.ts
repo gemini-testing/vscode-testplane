@@ -8,5 +8,8 @@ export const getVSCodeConfig = async (wf?: vscode.WorkspaceFolder): Promise<VSCo
     const settings = getVSCodeSettings(wf);
     const configPath = settings.configPath ? settings.configPath : await findTestplaneConfigFile();
 
-    return { configPath };
+    return {
+        configPath,
+        env: settings.env,
+    };
 };
