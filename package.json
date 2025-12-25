@@ -21,7 +21,7 @@
       {
         "category": "Test",
         "command": "tpn.install",
-        "title": "Install Testplane"
+        "title": "Testplane Install"
       }
     ],
     "keybindings": {
@@ -101,13 +101,14 @@
     "eslint": "^8.56.0",
     "eslint-config-gemini-testing": "^3.0.0",
     "eslint-config-prettier": "^9.1.0",
+    "get-port": "^5.1.1",
     "lodash": "^4.17.21",
     "pathe": "^1.1.2",
     "prettier": "^3.2.5",
     "standard-version": "^9.5.0",
     "strftime": "^0.10.3",
     "strip-ansi": "^7.1.0",
-    "testplane": "^8.20.2",
+    "testplane": "^8.39.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.2.4",
     "typescript": "^5.3.3",
@@ -116,6 +117,6 @@
     "which": "^4.0.0"
   },
   "peerDependencies": {
-    "testplane": ">8.20.0"
+    "testplane": ">=8.39.0"
   }
 }

@@ -97,13 +97,13 @@ class TestplaneExtension {
                 return;
             }
 
-            const childProc = await createChildProcess(wf, config);
+            const testplaneProc = await createChildProcess(wf, config);
 
             const { api, handlers } = createTestplaneMasterRpc({
                 on: listener => {
-                    childProc.on("message", listener);
+                    testplaneProc.on("message", listener);
                 },
-                post: (message: string) => childProc.send(message),
+                post: (message: string) => testplaneProc.send(message),
             });
 
             const tests = await api.readTests([], { runnableOpts: { saveLocations: true } });

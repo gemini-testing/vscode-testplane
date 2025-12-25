@@ -3,6 +3,8 @@ import _ from "lodash";
 import { basename, normalize, relative } from "pathe";
 import stripAnsi from "strip-ansi";
 import ErrorStackParser from "error-stack-parser";
+import getPort from "get-port";
+import { connect } from "node:net";
 import type { TestError } from "testplane";
 
 import { TestTree } from "../test-tree";
@@ -83,7 +85,11 @@ export class TestRunner extends vscode.Disposable {
         const settings = this._context.workspaceState.get<SettingOptions>("tpn.settings");
 
         const files = getTestFiles(tests);
-        const opts = getRunTestsOpts(tests, settings);
+        const opts = await getRunTestsOpts(tests, settings);
+
+        if (opts.replMode?.enabled) {
+            this._openReplTerminal(opts.replMode.port);
+        }
 
         if (!tests.length) {
             const browserItems = this._tree.getBrowserTestItemsByFolderPath(root);
@@ -223,16 +229,53 @@ export class TestRunner extends vscode.Disposable {
         this._testRun = undefined;
         this._api.stopTests();
     }
+
+    private _openReplTerminal(port: number): void {
+        const checkInterval = 500;
+        const maxAttempts = 240; // 240 * 500ms = 2 minutes
+        let attempts = 0;
+
+        const checkPort = (): void => {
+            attempts++;
+
+            const socket = connect(port, "localhost", () => {
+                socket.destroy();
+
+                const terminal = vscode.window.createTerminal({
+                    name: "REPL TCP Client",
+                    shellPath: "nc",
+                    shellArgs: ["localhost", port.toString()],
+                });
+
+                terminal.show();
+            });
+
+            socket.on("error", () => {
+                socket.destroy();
+
+                if (attempts >= maxAttempts) {
+                    logger.error(`Failed to connect to REPL server on port ${port} after ${maxAttempts} attempts`);
+                } else {
+                    logger.debug?.(
+                        `Port ${port} is not available right now, trying again in ${checkInterval}ms, attempt ${attempts + 1} of ${maxAttempts}`,
+                    );
+                    setTimeout(checkPort, checkInterval);
+                }
+            });
+        };
+
+        checkPort();
+    }
 }
 
 function getTestFiles(tests: readonly vscode.TestItem[]): string[] {
     return _.uniq(tests.map(test => normalize(test.uri!.fsPath)).filter(Boolean));
 }
 
-function getRunTestsOpts(
+async function getRunTestsOpts(
     tests: readonly vscode.TestItem[],
     settings: SettingOptions | undefined,
-): Partial<TestplaneMasterRunTestsOpts> {
+): Promise<Partial<TestplaneMasterRunTestsOpts>> {
     const opts: TestplaneMasterRunTestsOpts = {};
     const patterns: string[] = [];
     const browserIds = new Set<string>();
@@ -270,6 +313,7 @@ function getRunTestsOpts(
             enabled: true,
             beforeTest: false,
             onFail: false,
+            port: await getPort(),
         };
     }
 
