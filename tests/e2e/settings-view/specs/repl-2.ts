@@ -22,14 +22,16 @@ describe("Settings view", () => {
             const outputView = await bottomBarPanel.openOutputView();
             await outputView.selectChannel("Testplane");
 
+            // maximize output view
+            await outputView.panel.elem.$(".codicon-panel-maximize").click();
+
             await browser.waitUntil(
                 async () => {
                     const outputText = await outputView.getText();
+                    const outputStr = outputText.join(" ").replace(/\s+/g, " ");
 
-                    return outputText.some(textLine =>
-                        /In repl mode only 1 test in 1 browser should be run, but found 2 tests that run in chrome browsers/.test(
-                            textLine,
-                        ),
+                    return outputStr.includes(
+                        "In repl mode only 1 test in 1 browser should be run, but found 2 tests that run in chrome browsers",
                     );
                 },
                 { timeout: 10000, timeoutMsg: "REPL mode was not turned on" },

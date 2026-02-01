@@ -15,7 +15,17 @@ export class TestingSideBar {
     }
 
     async getSections(): Promise<TestingViewSection[]> {
-        const sections = await this._sidebarView.getSections();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let sections: any[] = [];
+
+        await browser.waitUntil(
+            async () => {
+                sections = await this._sidebarView.getSections();
+
+                return sections.length > 1;
+            },
+            { timeout: 20000 },
+        );
 
         return sections.map(section => new TestingViewSection(section));
     }
